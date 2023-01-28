@@ -8,22 +8,77 @@ class Counter{
     #counterClasses = ["counter","display--flex","justify-content--center","align-items--center"];
     #buttonDivClasses = ["button-div", "display--flex","justify-content--center","align-items--center" ];
     #counterButtonClasses = ["counter--button"];
-
-    constructor(count){
-        this.#count = count || 0;
-        this.incrementButtonId = UniqueId.generateUniqueId({config:"increment"});
-        this.decrementButtonId = UniqueId.generateUniqueId({config:"decrement"});
+    #isMounted = false;
+    constructor(){
+        this.#count = 0;
+        this.incrementButtonId = UniqueId.generateUniqueId({prefix:"increment"});
+        this.decrementButtonId = UniqueId.generateUniqueId({prefix:"decrement"});
         this.countersIds = new Array();
+        this.counterDivId = UniqueId.generateUniqueId({prefix:"counterDiv"})
     }
+
     incrementCounter(){
         this.#count++;
+        this.addCounter(this.#count-1,this.#count);
     }
-
+    
     decrementCounter(){
         this.#count--;
+        this.addCounter(this.#count+1,this.#count);
     }
 
-    updateCounter(){}
+    updateCounterUI(){
+        const countString = this.#count.toString();
+        let digitCounter = 0;
+        [...countString].forEach((digit) => {
+            document.
+            getElementById(this.countersIds[digitCounter])
+            .innerText = digit;
+            digitCounter++;
+        });
+    }
+
+    playBounceAnimation(){
+        const counter = document.getElementById(this.countersIds[0]);
+        counter.className = this.#counterClasses.join(" ");
+        requestAnimationFrame((time) => {
+            requestAnimationFrame((time) => {
+                counter.classList.add("bouncy-animation");
+            });
+        });
+    }
+    addCounter(oldCount, newCount){
+        let oldLength = oldCount.toString().length;
+        let newLength = newCount.toString().length;
+
+        if(oldCount == newCount){
+            oldLength = newLength - 1;
+        }
+
+        let difference = newLength - oldLength;
+        
+        const counterDiv = document.getElementById(this.counterDivId);
+        if(difference > 0){
+            while(oldLength < newLength){
+                oldLength++;
+                const counter = document.createElement("div");
+                const counterId= UniqueId.generateUniqueId({prefix:"counter"});
+                counter.id = counterId;
+                this.countersIds.push(counterId);
+                counter.classList.add(...this.#counterClasses);
+                counterDiv.appendChild(counter);
+                this.playBounceAnimation();
+            }
+        }
+        else if(difference < 0){
+            while(difference < 0){
+                counterDiv.removeChild(counterDiv.lastElementChild);
+                this.countersIds.pop();
+                difference++;
+            }
+        }
+        this.updateCounterUI();
+    }
 
     render(){
         const container = document.createElement('div');
@@ -42,9 +97,9 @@ class Counter{
         buttonDiv.classList.add(...this.#buttonDivClasses);
         incrementButton.classList.add(...this.#counterButtonClasses);
         decrementButton.classList.add(...this.#counterButtonClasses);
-        counterDiv.id = "counterDiv";
-        incrementButton.id="increment-bt";
-        decrementButton.id="decrement-bt";
+        counterDiv.id = this.counterDivId;
+        incrementButton.id= this.incrementButtonId;
+        decrementButton.id=this.decrementButtonId;
 
         counterHeading.innerText = "COUNTER";
         incrementButton.innerText = "+";
@@ -59,16 +114,19 @@ class Counter{
         buttonDiv.appendChild(decrementButton);
         buttonDiv.appendChild(incrementButton);
         container.appendChild(counterContainer);
-        
         return container;
     }
 
     mount(el){
+        if(this.#isMounted) return;
+        this.#isMounted = true;
         if(el){
             el.appendChild(this.render());
+            this.addCounter(0,(this.#count || 0));
             return;
         }
         document.body.appendChild(this.render());
+        this.addCounter(0,(this.#count || 0));
         return;
     }
 }
