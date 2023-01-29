@@ -11,6 +11,7 @@ class Counter{
     #isMounted = false;
     constructor(){
         this.#count = 0;
+        this.containerId = UniqueId.generateUniqueId({prefix:"counter-container"});
         this.incrementButtonId = UniqueId.generateUniqueId({prefix:"increment"});
         this.decrementButtonId = UniqueId.generateUniqueId({prefix:"decrement"});
         this.countersIds = new Array();
@@ -50,11 +51,6 @@ class Counter{
     addCounter(oldCount, newCount){
         let oldLength = oldCount.toString().length;
         let newLength = newCount.toString().length;
-
-        if(oldCount == newCount){
-            oldLength = newLength - 1;
-        }
-
         let difference = newLength - oldLength;
         
         const counterDiv = document.getElementById(this.counterDivId);
@@ -97,6 +93,7 @@ class Counter{
         buttonDiv.classList.add(...this.#buttonDivClasses);
         incrementButton.classList.add(...this.#counterButtonClasses);
         decrementButton.classList.add(...this.#counterButtonClasses);
+        container.id = this.containerId;
         counterDiv.id = this.counterDivId;
         incrementButton.id= this.incrementButtonId;
         decrementButton.id=this.decrementButtonId;
@@ -122,12 +119,18 @@ class Counter{
         this.#isMounted = true;
         if(el){
             el.appendChild(this.render());
-            this.addCounter(0,(this.#count || 0));
+            this.addCounter("",(this.#count || 0));
             return;
         }
         document.body.appendChild(this.render());
-        this.addCounter(0,(this.#count || 0));
+        this.addCounter("",(this.#count || 0));
         return;
+    }
+    unmount(){
+        if(!this.#isMounted) return;
+        document.getElementById(this.containerId).remove();
+        this.countersIds = new Array();
+        this.#isMounted=false;
     }
 }
 

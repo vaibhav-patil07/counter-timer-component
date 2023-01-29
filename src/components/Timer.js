@@ -10,6 +10,8 @@ class Timer{
     constructor(){
         setInterval(this.tick.bind(this),100);
         this.#seconds = 0;
+
+        this.containerId = UniqueId.generateUniqueId({prefix: "timer-container"});
         this.hourTimerId = UniqueId.generateUniqueId({prefix: "hour-timer"});
         this.minuteTimerId = UniqueId.generateUniqueId({prefix: "minute-timer"});
         this.secondTimerId = UniqueId.generateUniqueId({prefix: "second-timer"});
@@ -31,6 +33,7 @@ class Timer{
         this.updateTimer();
     }
     updateTimer(){
+        if(!this.#isMounted) return;
         let hour = Math.trunc(this.#seconds / 3600);
         let minute = Math.trunc(this.#seconds / 60);
         let second = Math.trunc(this.#seconds % 60);
@@ -66,6 +69,7 @@ class Timer{
         const resetButton = document.createElement('button');
         const playPauseButton = document.createElement('button');
 
+        container.id = this.containerId;
         hourTimer.id = this.hourTimerId;
         minuteTimer.id = this.minuteTimerId;
         secondTimer.id = this.secondTimerId;
@@ -130,6 +134,12 @@ class Timer{
             return;
         }
         document.body.appendChild(this.render());
+        return;
+    }
+    unmount(){
+        if(!this.#isMounted) return;
+        document.getElementById(this.containerId).remove();
+        this.#isMounted=false;
         return;
     }
 }
