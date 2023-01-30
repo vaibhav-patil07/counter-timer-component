@@ -8,9 +8,8 @@ class Timer{
     #justifyCenter = "justify-content--center";
     #alignCenter = "align-items--center";
     constructor(){
-        setInterval(this.tick.bind(this),100);
+        setInterval(this.tick.bind(this),1000);
         this.#seconds = 0;
-
         this.containerId = UniqueId.generateUniqueId({prefix: "timer-container"});
         this.hourTimerId = UniqueId.generateUniqueId({prefix: "hour-timer"});
         this.minuteTimerId = UniqueId.generateUniqueId({prefix: "minute-timer"});
