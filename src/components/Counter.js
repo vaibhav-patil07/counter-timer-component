@@ -18,17 +18,17 @@ class Counter{
         this.counterDivId = UniqueId.generateUniqueId({prefix:"counterDiv"})
     }
 
-    incrementCounter(){
+    #incrementCounter(){
         this.#count++;
-        this.addCounter(this.#count-1,this.#count);
+        this.#addCounter(this.#count-1,this.#count);
     }
     
-    decrementCounter(){
+    #decrementCounter(){
         this.#count--;
-        this.addCounter(this.#count+1,this.#count);
+        this.#addCounter(this.#count+1,this.#count);
     }
 
-    updateCounterUI(){
+    #updateCounterUI(){
         const countString = this.#count.toString();
         let digitCounter = 0;
         [...countString].forEach((digit) => {
@@ -39,7 +39,7 @@ class Counter{
         });
     }
 
-    playBounceAnimation(){
+    #playBounceAnimation(){
         const counter = document.getElementById(this.countersIds[0]);
         counter.className = this.#counterClasses.join(" ");
         requestAnimationFrame((time) => {
@@ -48,7 +48,8 @@ class Counter{
             });
         });
     }
-    addCounter(oldCount, newCount){
+
+    #addCounter(oldCount, newCount){
         let oldLength = oldCount.toString().length;
         let newLength = newCount.toString().length;
         let difference = newLength - oldLength;
@@ -63,7 +64,7 @@ class Counter{
                 this.countersIds.push(counterId);
                 counter.classList.add(...this.#counterClasses);
                 counterDiv.appendChild(counter);
-                this.playBounceAnimation();
+                this.#playBounceAnimation();
             }
         }
         else if(difference < 0){
@@ -73,7 +74,7 @@ class Counter{
                 difference++;
             }
         }
-        this.updateCounterUI();
+        this.#updateCounterUI();
     }
 
     render(){
@@ -102,8 +103,8 @@ class Counter{
         incrementButton.innerText = "+";
         decrementButton.innerText = "-"; 
 
-        incrementButton.onclick = this.incrementCounter.bind(this);
-        decrementButton.onclick = this.decrementCounter.bind(this);
+        incrementButton.onclick = this.#incrementCounter.bind(this);
+        decrementButton.onclick = this.#decrementCounter.bind(this);
 
         counterContainer.appendChild(counterHeading);
         counterContainer.appendChild(counterDiv);
@@ -119,11 +120,11 @@ class Counter{
         this.#isMounted = true;
         if(el){
             el.appendChild(this.render());
-            this.addCounter("",(this.#count || 0));
+            this.#addCounter("",(this.#count || 0));
             return;
         }
         document.body.appendChild(this.render());
-        this.addCounter("",(this.#count || 0));
+        this.#addCounter("",(this.#count || 0));
         return;
     }
     unmount(){

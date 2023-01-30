@@ -1,6 +1,6 @@
 import { UniqueId } from "./UniqueId.js";
 class Toggle{
-    constructor(toggleHeadings,togglefunction){
+    constructor(toggleHeadings,toggleFunction){
         if(toggleHeadings){
             const {off,on} = toggleHeadings;
             if(off && on){
@@ -10,7 +10,7 @@ class Toggle{
         }
         this.toggleId = UniqueId.generateUniqueId({prefix:"toggle-input"});
         this.toggleHeadingId = UniqueId.generateUniqueId({prefix:"toggle-heading"});
-        this.togglefunction = togglefunction;
+        this.toggleFunction = toggleFunction;
     }
     render(){
         const container = document.createElement('div');
@@ -37,7 +37,7 @@ class Toggle{
             }else{
                 heading.innerText = `Switch to ${this.on}`;
             }
-            this.togglefunction(event.target.checked);
+            this.toggleFunction(event.target.checked);
         });
 
         label.appendChild(input);
