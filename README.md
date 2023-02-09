@@ -1,5 +1,7 @@
 # counter-timer-component
-<h2>This repository has Counter and Timer application developed as components</h2>
+<h2>This repository has Counter and Timer application developed as components</h2><br>
+<a href="https://vaibhav-patil07.github.io/counter-timer-component/">Live link</a>
+
 List of components:
 <ul>
     <li>Counter</li>
